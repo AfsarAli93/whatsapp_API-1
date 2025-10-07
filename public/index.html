@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Message Sender</title>
+  <style>
+    body {
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f1f1f1;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1ebe5a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>WhatsApp API Demo</h2>
+    <input type="text" id="phone" placeholder="Enter phone number (e.g., 91XXXXXXXXXX)">
+    <textarea id="message" rows="4" placeholder="Enter your message"></textarea>
+    <button onclick="sendMessage()">Send</button>
+
+    <p id="status"></p>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const phone = document.getElementById("phone").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const status = document.getElementById("status");
+
+      if (!phone || !message) {
+        status.textContent = "⚠️ Please fill both fields.";
+        return;
+      }
+
+      status.textContent = "Sending...";
+
+      try {
+        const res = await fetch("http://localhost:3000/api/messages/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ to: phone, message })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          status.textContent = "Message sent successfully!";
+        } else {
+          status.textContent = "Failed: " + (data.error || "Unknown error");
+        }
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

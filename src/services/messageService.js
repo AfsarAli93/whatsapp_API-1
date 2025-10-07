@@ -1,21 +1,22 @@
-const axios = require('axios');
-const { getToken } = require('./authService');
+import { apiClient } from "../utils/apiClient.js";
+import { getAuthToken } from "./authService.js";
 
-async function sendMessageService(payload) {
-  const token = await getToken();
+export const sendWhatsAppMessage = async (to, text) => {
+  const token = await getAuthToken();
 
-  const response = await axios.post(
-    'https://whatsapp.rmlconnect.net/v1/messages',
-    payload,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const payload = {
+    from: "YourWhatsAppNumber", // Client given number
+    to,
+    type: "text",
+    text: { body: text },
+  };
+
+  const response = await apiClient.post("/wba/v1/messages", payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 
   return response.data;
-}
-
-module.exports = { sendMessageService };
+};

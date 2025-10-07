@@ -1,8 +1,7 @@
-const axios = require('axios');
+import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 
-const apiClient = axios.create({
-  baseURL: 'https://whatsapp.rmlconnect.net/v1',
-  headers: { 'Content-Type': 'application/json' },
+export const apiClient = axios.create({
+  baseURL: process.env.ROUTE_MOBILE_BASE_URL,
 });
-
-module.exports = apiClient;

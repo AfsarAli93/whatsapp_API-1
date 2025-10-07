@@ -1,22 +1,21 @@
-const axios = require('axios');
-require('dotenv').config();
+import { apiClient } from "../utils/apiClient.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-let tokenCache = null;
+let cachedToken = null;
 
-async function getToken() {
-  if (tokenCache) return tokenCache;
+export const getAuthToken = async () => {
+  if (cachedToken) return cachedToken;
 
-  const response = await axios.post(
-    'https://apis.rmlconnect.net/auth/v1/login/',
-    {
-      username: process.env.ROUTE_USERNAME,
-      password: process.env.ROUTE_PASSWORD,
-    }
-  );
+  const payload = {
+    username: process.env.ROUTE_MOBILE_USERNAME,
+    password: process.env.ROUTE_MOBILE_PASSWORD,
+  };
 
-  tokenCache = response.data.data.token;
-  return tokenCache;
-}
+  const response = await apiClient.post("/auth/v1/login", payload);
+  cachedToken = response.data.JWTAUTH;
 
-module.exports = { getToken };
-    
+  return cachedToken;
+};
+
+export default getAuthToken;       

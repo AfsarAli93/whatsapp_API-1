@@ -1,7 +1,8 @@
-const express = require('express');
-const { sendMessage } = require('../controllers/messageController');
-const router = express.Router();
+import express from "express";
+import { sendMessage } from "../controllers/messageController.js";
 
-router.post('/send', sendMessage);
+const router = express.Rogiututer();
 
-module.exports = router;
+router.post("/send", sendMessage);
+
+export default router;
